@@ -36,29 +36,29 @@ image = "download.jpg"
 @app.route("/download", methods=['GET', 'POST'])
 def download(bucket=bucket, imageName=image):
     try:
-        imagesDir = "temp"
+        imagesDir = "static"
         if not os.path.exists(imagesDir):
             os.makedirs(imagesDir)
-        bgImagePath = os.path.join(imagesDir, "image.png")
+        bgImagePath = os.path.join(imagesDir, "image.jpg")
         s3 = boto3.resource('s3')
         s3.Bucket(bucket).download_file(imageName, bgImagePath)
-        return os.path.join(imagesDir, "image.png")
+        return os.path.join(imagesDir, "image.jpg")
     except Exception as e:
         print("Exception occurred while fetching the image! Check the log --> ", e)
 
 
 # Fetch image from S3 bucket
-image_path = download(bucket, image)
+image = download(BUCKETNAME, BGIMG)
 
-# Route for the home page
+# Route for the home page   
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('addemp.html', image_path=image_path)
+    return render_template('addemp.html', image=image)
 
 # Route for the about page
 @app.route("/about", methods=['GET','POST'])
 def about():
-    return render_template('about.html', image_path=image_path)
+    return render_template('about.html', image=image)
 
 # Route for adding employee information
 @app.route("/addemp", methods=['POST'])
@@ -66,12 +66,12 @@ def AddEmp():
     # Add employee information to the database
     # Retrieve form data and perform database operations
     # Add your implementation here
-    return render_template('addempoutput.html', name=emp_name, image_path=image_path)
+    return render_template('addempoutput.html', name=emp_name, image=image)
 
 # Route for getting employee information
 @app.route("/getemp", methods=['GET', 'POST'])
 def GetEmp():
-    return render_template("getemp.html", image_path=image_path)
+    return render_template("getemp.html", image=image)
 
 # Route for fetching employee data
 @app.route("/fetchdata", methods=['GET','POST'])
@@ -80,7 +80,7 @@ def FetchData():
     # Retrieve form data and perform database query
     # Add your implementation here
     return render_template("getempoutput.html", id=output["emp_id"], fname=output["first_name"],
-                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"], image_path=image_path)
+                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"], image=image)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=81, debug=True)
