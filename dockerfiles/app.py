@@ -26,24 +26,25 @@ output = {}
 table = 'employee';
 
 
-# Define the download_image function
-def download_image(bucket_name, directory, image_name):
+bucket = "clo835-project"
+image = "download.jpg"
+
+@app.route("/download", methods=['GET', 'POST'])
+def download(bucket=bucket, imageName=image):
     try:
-        session = boto3.Session(
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-            region_name=AWS_REGION
-        )
-        s3 = session.resource('s3')
-        image_path = f"/tmp/{image_name}"
-        s3.Bucket(bucket_name).download_file(f"{directory}/{image_name}", image_path)
-        return image_path
+        imagesDir = "temp"
+        if not os.path.exists(imagesDir):
+            os.makedirs(imagesDir)
+        bgImagePath = os.path.join(imagesDir, "image.png")
+        s3 = boto3.resource('s3')
+        s3.Bucket(bucket).download_file(imageName, bgImagePath)
+        return os.path.join(imagesDir, "image.png")
     except Exception as e:
-        print("Exception occurred while fetching the image:", e)
-        return None
+        print("Exception occurred while fetching the image! Check the log --> ", e)
+
 
 # Fetch image from S3 bucket
-image_path = download_image(BUCKET_NAME, IMAGE_DIRECTORY, IMAGE_NAME)
+image_path = download(bucket, image)
 
 # Route for the home page
 @app.route("/", methods=['GET', 'POST'])
