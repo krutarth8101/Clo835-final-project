@@ -10,14 +10,21 @@ DBUSER = os.environ.get("DBUSER") or "root"
 DBPWD = os.environ.get("DBPWD") or "password"
 DATABASE = os.environ.get("DATABASE") or "employees"
 DBPORT = int(os.environ.get("DBPORT"))
+BGIMG = os.environ.get("BGIMG") or "download.jpg"
+BUCKETNAME = os.environ.get("BUCKETNAME") or "clo835-project"
 
-# AWS configuration
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_REGION = os.environ.get("AWS_REGION") or "us-east-1"
-BUCKET_NAME = os.environ.get("BUCKET_NAME") or "clo835-project"
-IMAGE_NAME = "download.jpg"  # Replace with your actual image name
-IMAGE_DIRECTORY = "images"
+# Create a connection to the MySQL database
+db_conn = connections.Connection(
+    host=DBHOST,
+    port=DBPORT,
+    user=DBUSER,
+    password=DBPWD, 
+    db=DATABASE
+)
+
+output = {}
+table = 'employee';
+
 
 # Define the download_image function
 def download_image(bucket_name, directory, image_name):
