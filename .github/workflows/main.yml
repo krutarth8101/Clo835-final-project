@@ -1,0 +1,45 @@
+name: Build and Push to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-east-1
+      ECR_REGISTRY_APP: 345852704676.dkr.ecr.us-east-1.amazonaws.com
+      ECR_REPO_NAME_APP: webapp
+      
+      
+      ECR_REGISTRY_SQL: 345852704676.dkr.ecr.us-east-1.amazonaws.com
+      ECR_REPO_NAME_SQL: mysql
+      
+
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: us-east-1
+      
+      - name: Build Docker image for App
+        run: |
+          cd dockerfiles/
+          docker build -t $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:webapp2 -f Dockerfile .
+          docker push $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:webapp2
+      - name: Build Docker image for SQL
+        run: |
+          cd dockerfiles/
+          docker build -t $ECR_REGISTRY_SQL/$ECR_REPO_NAME_SQL:mysql -f Dockerfile_mysql .
+          docker push $ECR_REGISTRY_SQL/$ECR_REPO_NAME_SQL:mysql
