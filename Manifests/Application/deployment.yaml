@@ -44,5 +44,10 @@ spec:
               configMapKeyRef:
                 name: configmap
                 key: bgimg
+        resources:
+          requests:
+            cpu: 15m
+          limits:
+            cpu: 50m
         ports:
           - containerPort: 81
