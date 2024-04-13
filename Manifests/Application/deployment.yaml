@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    app: employees
+    namespace: final
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employees
+  template:
+    metadata:
+      labels:
+        app: employees
+    spec:
+      containers:
+      - name: app-container
+        image: 345852704676.dkr.ecr.us-east-1.amazonaws.com/webapp:webapp2
+        env:
+          - name: DATABASE
+            value: employees
+          - name: DBHOST
+            value: "mysql.final.svc.cluster.local"
+          - name: DBPORT
+            value: "3306"
+          - name: BUCKETNAME
+          - name: DBPWD
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: password
+          - name: DBUSER
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: username    
+            valueFrom:
+              configMapKeyRef:
+                name: configmap
+                key: bucket
+          - name: BGIMG
+            valueFrom:
+              configMapKeyRef:
+                name: configmap
+                key: bgimg
+      ports:
+      - containerPort: 81

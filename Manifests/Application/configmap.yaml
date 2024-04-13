@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+data:
+  bucket: "clo835-project"
+  bgimg: "download.jpg"

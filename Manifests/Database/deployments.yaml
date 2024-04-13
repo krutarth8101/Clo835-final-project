@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-deployment
+  labels:
+    app: mysql
 namespace: final
 spec:
   replicas: 1
@@ -19,9 +21,11 @@ spec:
         ports:
         - containerPort: 3306
         env:
-        - env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: pw
+         - name: MYSQL_ROOT_PASSWORD
+           valueFrom:
+             secretKeyRef:
+               name: mysql
+               key: password
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
