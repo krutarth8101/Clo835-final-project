@@ -2,20 +2,38 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app
-  namespace: final
+  labels:
+    app: employees
+    namespace: final
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app
+      app: employees
   template:
     metadata:
       labels:
-        app: app
+        app: employees
     spec:
-      serviceAccountName: clo835
       containers:
-      - name: app
-        image: 329673269900.dkr.ecr.us-east-1.amazonaws.com/webapp:v0.1
+      - name: app-container
+        image: 345852704676.dkr.ecr.us-east-1.amazonaws.com/webapp:webapp2
+        env:
+          - name: DATABASE
+            value: employees
+          - name: DBHOST
+            value: "mysql.final.svc.cluster.local"
+          - name: DBPORT
+            value: "3306"
+          - name: BUCKETNAME
+            valueFrom:
+              configMapKeyRef:
+                name: configmap
+                key: bucket
+          - name: BGIMG
+            valueFrom:
+              configMapKeyRef:
+                name: configmap
+                key: bgimg
       ports:
-      - containerPort: 8080
+      - containerPort: 81
