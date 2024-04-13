@@ -37,7 +37,7 @@ jobs:
         run: |
           cd dockerfiles/
           docker build -t $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:webapp2 -f Dockerfile .
-          docker push $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:webapp2
+          docker push $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:webapp
       - name: Build Docker image for SQL
         run: |
           cd dockerfiles/
