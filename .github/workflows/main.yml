@@ -36,10 +36,10 @@ jobs:
       - name: Build Docker image for App
         run: |
           cd dockerfiles/
-          docker build -t $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:webapp2 -f Dockerfile .
+          docker build -t $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:v1 -f Dockerfile .
           docker push $ECR_REGISTRY_APP/$ECR_REPO_NAME_APP:v1
       - name: Build Docker image for SQL
         run: |
           cd dockerfiles/
-          docker build -t $ECR_REGISTRY_SQL/$ECR_REPO_NAME_SQL:mysql -f Dockerfile_mysql .
+          docker build -t $ECR_REGISTRY_SQL/$ECR_REPO_NAME_SQL:v1 -f Dockerfile_mysql .
           docker push $ECR_REGISTRY_SQL/$ECR_REPO_NAME_SQL:v1
