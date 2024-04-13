@@ -26,6 +26,16 @@ spec:
           - name: DBPORT
             value: "3306"
           - name: BUCKETNAME
+          - name: DBPWD
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: password
+          - name: DBUSER
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: username    
             valueFrom:
               configMapKeyRef:
                 name: configmap
